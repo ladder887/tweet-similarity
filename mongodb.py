@@ -150,20 +150,68 @@ def content_data_processing(data):
     return data
 
 if __name__ == "__main__":
+
+    #데이터 위치
+    file_path = 'C:\\Users\\Cysec\\Desktop\\knowledge_graph\\data_retweeted_processing\\'
+    csv_list = ["2cb.csv", 
+            "acid.csv", 
+            "Adderall.csv", 
+            "Amphetamine.csv", 
+            "benzos.csv", 
+            "bud.csv", 
+            "carts.csv", 
+            "cocaine.csv",
+            "coke.csv",
+            "DMT.csv",
+            "dmtvape.csv",
+            "drugs.csv",
+            "drugstwt.csv",
+            "drugtwt.csv",
+            "ecstacy.csv",
+            "edibles.csv",
+            "Fentanyl.csv",
+            "hash.csv",
+            "hashish.csv",
+            "heroin.csv",
+            "hydrocodone.csv",
+            "ketamine.csv",
+            "kush.csv",
+            "lsd.csv",
+            "Marijuana.csv",
+            "mdma.csv",
+            "Mescaline.csv",
+            "meth.csv",
+            "methamphetamine.csv",
+            "mushrooms.csv",
+            "nufcfanscoke.csv",
+            "pills.csv",
+            "plug.csv",
+            "psilocybin.csv",
+            "psychedelics.csv",
+            "search420Life.csv",
+            "shrooms.csv",
+            "vegasplug.csv",
+            "weed.csv",
+            "Xanax.csv",
+            "1drugtwt.csv",
+            "1mdma.csv",
+        ]
+
     mongo_handler = MongoDBHandler()
     my_collection = mongo_handler.get_collection('tweet')
     count = 0
     my_collection.create_index([('AccountID')], unique = True)
 
-    csv_file_path = 'C:\\Users\\Cysec\\Desktop\\knowledge_graph\\sampleRetweeted2.csv'
-    df = pd.read_csv(csv_file_path, encoding='utf-8-sig')
+    for csv_name in csv_list:
+        csv_file_path = file_path + csv_name
+        df = pd.read_csv(csv_file_path, encoding='utf-8-sig')
 
-    for standard in df.itertuples():
+        for standard in df.itertuples():
 
-        temp = my_collection.find_one({'TweetData': {'$elemMatch' : {'TweetID' :id_data_preprocessing(standard.TweetID)}}})
-        if temp:
-            print("TweetID already exists in the database: ", standard.TweetID)
-            continue
-        mongo_handler.insert_document(my_collection, standard, id_data_preprocessing(standard.AccountID))
-        count += 1
-        print(count)
+            temp = my_collection.find_one({'TweetData': {'$elemMatch' : {'TweetID' :id_data_preprocessing(standard.TweetID)}}})
+            if temp:
+                print("TweetID already exists in the database: ", standard.TweetID)
+                continue
+            mongo_handler.insert_document(my_collection, standard, id_data_preprocessing(standard.AccountID))
+            count += 1
+            print(count)
