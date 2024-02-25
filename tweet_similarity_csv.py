@@ -31,7 +31,7 @@ class Similarity:
     def content_similarity(self, set1, set2):
         if not set1 or not set2:
             return 0
-        return self.cos_similarity(self, set1, set2)
+        return self.cos_similarity(set1, set2)
 
     def content_processing(self, data):
         if not pd.notna(data):

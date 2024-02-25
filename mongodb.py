@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import pandas as pd
 import re
+from dateutil.parser import parse
 
 class MongoDBHandler: #몽고 디비 핸들러
     def __init__(self, host='localhost', port=27017, database_name='d3'):
@@ -12,7 +13,7 @@ class MongoDBHandler: #몽고 디비 핸들러
     def get_collection(self, collection_name): # 몽고디비에 데이터베이스를 선택하고 선택된 데이터베이스 안에 컬랙션이라는 것을 만들 수 있음 데이터베이스는 서비스 전체, 컬랙션은 유저 목록, 상품 종류 이런거임.
         return self.db[collection_name]
     
-    def insert_document(self, collection, standard, AccountID):
+    def insert_tweet_document(self, collection, standard, AccountID):
         # 기존 데이터 가져오기
         existing_doc = collection.find_one({"AccountID": AccountID})
 
@@ -30,7 +31,7 @@ class MongoDBHandler: #몽고 디비 핸들러
                             'TweetContentPreprocessing' : content_data_processing(standard.TweetContent),
                             'AuthorID' : id_data_preprocessing(standard.AuthorID),
                             'OriginalTweetID' : id_data_preprocessing(standard.OriginalTweetID),
-                            'TweetCreated' : standard.TweetCreated,
+                            'TweetCreated' : parse(standard.TweetCreated),
                             'TweetEntities' : nan_data_preprocessing(standard.TweetEntities),
                             'TweetContentHashtag' : list_data_preprocessing(standard.TweetContentHashtag),
                             'TweetContentURL' : list_data_preprocessing(standard.TweetContentURL),
@@ -66,7 +67,7 @@ class MongoDBHandler: #몽고 디비 핸들러
                 'AccountID' : AccountID,
                 'AccountNickname' : standard.AccountNickname,
                 'AccountName' : standard.AccountName,
-                'AccountCreated' : standard.AccountCreated,
+                'AccountCreated' : parse(standard.AccountCreated),
                 'AccountDescription' : nan_data_preprocessing(standard.AccountDescription),
                 'AccountDescriptionPreprocessing' : content_data_processing(standard.AccountDescription),
                 'AccountEntities' : nan_data_preprocessing(standard.AccountEntities),
@@ -88,7 +89,7 @@ class MongoDBHandler: #몽고 디비 핸들러
                     'TweetContentPreprocessing' : content_data_processing(standard.TweetContent),
                     'AuthorID' : id_data_preprocessing(standard.AuthorID),
                     'OriginalTweetID' : id_data_preprocessing(standard.OriginalTweetID),
-                    'TweetCreated' : standard.TweetCreated,
+                    'TweetCreated' : parse(standard.TweetCreated),
                     'TweetEntities' : nan_data_preprocessing(standard.TweetEntities),
                     'TweetContentHashtag' : list_data_preprocessing(standard.TweetContentHashtag),
                     'TweetContentURL' : list_data_preprocessing(standard.TweetContentURL),
@@ -117,6 +118,9 @@ class MongoDBHandler: #몽고 디비 핸들러
                 print("데이터 생성 완료")
             else:
                 print("데이터 생성 실패")
+
+    #def insert_similarity_document(self, data):
+
 
 #id형식 데이터 전처리
 def id_data_preprocessing(data):
