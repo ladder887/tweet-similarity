@@ -216,6 +216,6 @@ if __name__ == "__main__":
             if temp:
                 print("TweetID already exists in the database: ", standard.TweetID)
                 continue
-            mongo_handler.insert_document(my_collection, standard, id_data_preprocessing(standard.AccountID))
+            mongo_handler.insert_tweet_document(my_collection, standard, id_data_preprocessing(standard.AccountID))
             count += 1
             print(count)
